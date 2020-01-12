@@ -1,20 +1,32 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Kata
 {
 	public class Checkout
 	{
-
 		decimal total = 0m;
+		IList<Item> itemCatalog;
+		IList<SpecialOffer> specialOffers;
 
+		public Checkout(IList<Item> itemCatalog, IList<SpecialOffer> specialOffers)
+		{
+			this.itemCatalog = itemCatalog;
+			this.specialOffers = specialOffers;
+		}
 		public decimal Total()
 		{
 			return total;
 		}
 
-		public void Scan(Item item)
+		public void Scan(string sku)
 		{
-			total += item.UnitPrice;
+			var item = itemCatalog.Where(x => x.SKU == sku).SingleOrDefault();
+			if (item != null)
+			{
+				total += item.UnitPrice;
+			}
 		}
 
 	}
