@@ -29,6 +29,16 @@ namespace Kata.Tests
 		}
 
 		[Test]
+		public void WhenItemNotInCatalog_ExpectedTotalZero()
+		{
+			var checkout = new Checkout(testProductCatalogue, testSpecialOffers);
+
+			checkout.Scan("A99XXXX");
+
+			Assert.AreEqual(checkout.Total(), 0);
+		}
+
+		[Test]
 		public void WhenScanSingleItem_ExpectedTotalCorrect()
 		{
 			var checkout = new Checkout(testProductCatalogue, testSpecialOffers);
@@ -38,14 +48,44 @@ namespace Kata.Tests
 			Assert.AreEqual(checkout.Total(), 0.50m);
 		}
 
-		public void WhenScanMultipleItems_ExpectedTotalCorrect()
+		[Test]
+		public void WhenScanMultipleItemsNoSpecialOffers_ExpectedTotalCorrect()
+		{
+			var checkout = new Checkout(testProductCatalogue, new List<SpecialOffer>());
+
+			checkout.Scan("B15");
+			checkout.Scan("A99");
+			checkout.Scan("B15");
+			
+			Assert.AreEqual(checkout.Total(), 1.10m);
+		}
+
+		[Test]
+		public void WhenScanMultipleItemsWithSimpleSpecialOffers_ExpectedTotalCorrect()
 		{
 			var checkout = new Checkout(testProductCatalogue, testSpecialOffers);
 
+			checkout.Scan("B15");
 			checkout.Scan("A99");
 			checkout.Scan("B15");
 
-			Assert.AreEqual(checkout.Total(), 0.80m);
+			Assert.AreEqual(checkout.Total(), 0.95m);
+		}
+
+		[Test]
+		public void WhenScanMultipleItemsWithComplexSpecialOffers_ExpectedTotalCorrect()
+		{
+			var checkout = new Checkout(testProductCatalogue, testSpecialOffers);
+		
+			checkout.Scan("B15");
+			checkout.Scan("B15");
+			checkout.Scan("B15");
+			checkout.Scan("A99");
+			checkout.Scan("A99");
+			checkout.Scan("A99");
+			checkout.Scan("A99");
+			checkout.Scan("B15");
+			Assert.AreEqual(checkout.Total(), 2.7m);
 		}
 	}
 }
